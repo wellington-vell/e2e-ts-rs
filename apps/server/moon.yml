@@ -1,0 +1,6 @@
+language: rust
+layer: application
+
+tasks:
+  dev:
+    command: "bacon run --headless"
