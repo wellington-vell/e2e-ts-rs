@@ -12,12 +12,12 @@ pub use todo::{CreateTodo, Todo, UpdateTodo};
 #[derive(OpenApi)]
 #[openapi(
     paths(
-        health::health_check,
-        todo::list_todos,
-        todo::get_todo,
-        todo::create_todo,
-        todo::update_todo,
-        todo::delete_todo
+        health::check,
+        todo::get_all,
+        todo::get_by_id,
+        todo::create,
+        todo::update,
+        todo::destroy
     ),
     components(schemas(Todo, CreateTodo, UpdateTodo))
 )]

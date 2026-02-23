@@ -4,13 +4,12 @@ use std::time::Duration;
 pub type Db = Pool<sqlx::Postgres>;
 
 pub async fn connect() -> Result<Db, sqlx::Error> {
-    let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://postgres:postgres@localhost:5432/e2e-ts-rs".to_string());
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is required");
 
     PgPoolOptions::new()
         .max_connections(5)
         .acquire_timeout(Duration::from_secs(3))
-        .connect(&database_url)
+        .connect(&db_url)
         .await
 }
 

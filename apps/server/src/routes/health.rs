@@ -25,10 +25,10 @@ impl HealthResponse {
         (status = 200, description = "Service is healthy", body = HealthResponse)
     )
 )]
-pub async fn health_check() -> impl IntoResponse {
+pub async fn check() -> impl IntoResponse {
     Json(HealthResponse::healthy())
 }
 
 pub fn router() -> Router {
-    Router::new().route("/health", get(health_check))
+    Router::new().route("/health", get(check))
 }

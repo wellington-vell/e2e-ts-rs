@@ -4,3 +4,15 @@ layer: application
 tasks:
   dev:
     command: "bacon run --headless"
+
+  clean:
+    command: "rm -rf target"
+
+  build:
+    command: "cargo build"
+
+  check:
+    command: "cargo check"
+
+  format:
+    command: "cargo fmt"

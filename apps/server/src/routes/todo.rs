@@ -26,25 +26,6 @@ vld::schema! {
 }
 impl_to_schema!(CreateTodo);
 
-vld::schema! {
-    #[derive(Debug, Serialize, Deserialize)]
-    pub struct UpdateTodo {
-        pub title: Option<String> => vld::string().min(5).max(255).optional(),
-        pub completed: Option<bool> => vld::boolean().optional(),
-    }
-}
-impl_to_schema!(UpdateTodo);
-
-pub fn router(db: PgPool) -> Router {
-    Router::new()
-        .route("/todos", get(list_todos))
-        .route("/todos", post(create_todo))
-        .route("/todos/{id}", get(get_todo))
-        .route("/todos/{id}", put(update_todo))
-        .route("/todos/{id}", delete(delete_todo))
-        .with_state(db)
-}
-
 #[utoipa::path(
     get,
     path = "/todos",
@@ -53,7 +34,7 @@ pub fn router(db: PgPool) -> Router {
         (status = 200, description = "List all todos", body = [Todo])
     )
 )]
-async fn list_todos(State(db): State<PgPool>) -> Result<impl IntoResponse, impl IntoResponse> {
+async fn get_all(State(db): State<PgPool>) -> Result<impl IntoResponse, impl IntoResponse> {
     let todos = sqlx::query_as::<_, Todo>("SELECT id, title, completed FROM todos")
         .fetch_all(&db)
         .await;
@@ -64,16 +45,27 @@ async fn list_todos(State(db): State<PgPool>) -> Result<impl IntoResponse, impl 
     }
 }
 
+vld::schema! {
+    #[derive(Debug, Serialize, Deserialize, ToSchema)]
+    pub struct UpdateTodo {
+        pub title: Option<String> => vld::string().min(5).max(255).optional(),
+        pub completed: Option<bool> => vld::boolean().optional(),
+    }
+}
+
 #[utoipa::path(
     get,
     path = "/todos/{id}",
     tag = "Todo",
+    params(
+        ("id" = i64, Path, description = "Todo ID")
+    ),
     responses(
         (status = 200, description = "Get a todo by id", body = Todo),
         (status = 404, description = "Todo not found")
     )
 )]
-async fn get_todo(
+async fn get_by_id(
     State(db): State<PgPool>,
     Path(id): Path<i64>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
@@ -101,7 +93,7 @@ async fn get_todo(
         (status = 201, description = "Create a new todo", body = Todo)
     )
 )]
-async fn create_todo(
+async fn create(
     State(db): State<PgPool>,
     Json(payload): Json<serde_json::Value>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
@@ -127,13 +119,16 @@ async fn create_todo(
     put,
     path = "/todos/{id}",
     tag = "Todo",
+    params(
+        ("id" = i64, Path, description = "Todo ID")
+    ),
     request_body = UpdateTodo,
     responses(
         (status = 200, description = "Update a todo", body = Todo),
         (status = 404, description = "Todo not found")
     )
 )]
-async fn update_todo(
+async fn update(
     State(db): State<PgPool>,
     Path(id): Path<i64>,
     Json(payload): Json<serde_json::Value>,
@@ -166,12 +161,15 @@ async fn update_todo(
     delete,
     path = "/todos/{id}",
     tag = "Todo",
+    params(
+        ("id" = i64, Path, description = "Todo ID")
+    ),
     responses(
         (status = 204, description = "Delete a todo"),
         (status = 404, description = "Todo not found")
     )
 )]
-async fn delete_todo(
+async fn destroy(
     State(db): State<PgPool>,
     Path(id): Path<i64>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
@@ -188,4 +186,14 @@ async fn delete_todo(
         )),
         Err(e) => Err((axum::http::StatusCode::INTERNAL_SERVER_ERROR, e.to_string())),
     }
+}
+
+pub fn router(db: PgPool) -> Router {
+    Router::new()
+        .route("/todos", get(get_all))
+        .route("/todos", post(create))
+        .route("/todos/{id}", get(get_by_id))
+        .route("/todos/{id}", put(update))
+        .route("/todos/{id}", delete(destroy))
+        .with_state(db)
 }
