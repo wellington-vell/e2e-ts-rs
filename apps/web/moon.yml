@@ -26,6 +26,9 @@ tasks:
   format:
     command: "bun run oxfmt"
 
+  openapi:
+    command: "openapi-ts"
+
 workspace:
   inheritedTasks:
     exclude:

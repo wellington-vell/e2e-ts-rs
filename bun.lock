@@ -4,9 +4,6 @@
   "workspaces": {
     "": {
       "name": "e2e-ts-rs",
-      "dependencies": {
-        "dotenv": "^17.3.1",
-      },
       "devDependencies": {
         "@hey-api/openapi-ts": "^0.92.4",
         "@moonrepo/cli": "^2.0.1",
