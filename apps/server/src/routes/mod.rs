@@ -6,6 +6,7 @@ use axum::Router;
 use utoipa::OpenApi;
 
 pub use health::router as health_router;
+pub use health::HealthResponse;
 pub use todo::router as todo_router;
 pub use todo::{CreateTodo, Todo, UpdateTodo};
 
@@ -19,7 +20,7 @@ pub use todo::{CreateTodo, Todo, UpdateTodo};
         todo::update,
         todo::destroy
     ),
-    components(schemas(Todo, CreateTodo, UpdateTodo))
+    components(schemas(Todo, CreateTodo, UpdateTodo, HealthResponse))
 )]
 pub struct ApiDoc;
 

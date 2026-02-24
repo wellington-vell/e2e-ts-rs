@@ -43,10 +43,10 @@ function TodosRoute() {
 }
 
 function TodoForm() {
-  const todos = useSuspenseQuery(orpc.Todo.getAll.queryOptions());
+  const todos = useSuspenseQuery(orpc.getAll.queryOptions());
 
   const mutation = useMutation(
-    orpc.Todo.create.mutationOptions({
+    orpc.create.mutationOptions({
       onSuccess: () => {
         todos.refetch();
         toast.success("Todo created successfully");
@@ -117,9 +117,9 @@ function TodoForm() {
 }
 
 function TodoList() {
-  const todos = useSuspenseQuery(orpc.Todo.getAll.queryOptions());
+  const todos = useSuspenseQuery(orpc.getAll.queryOptions());
   const toggleMutation = useMutation(
-    orpc.Todo.update.mutationOptions({
+    orpc.update.mutationOptions({
       onSuccess: () => {
         toast.success("Todo toggled successfully");
         todos.refetch();
@@ -128,7 +128,7 @@ function TodoList() {
   );
 
   const deleteMutation = useMutation(
-    orpc.Todo.destroy.mutationOptions({
+    orpc.destroy.mutationOptions({
       onSuccess: () => {
         toast.success("Todo deleted successfully");
         todos.refetch();

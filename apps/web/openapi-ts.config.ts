@@ -14,14 +14,13 @@ export default defineConfig({
   plugins: [
     {
       name: "zod",
-      requests: false,
+      requests: true,
       responses: false,
       case: "snake_case",
     },
     {
       name: "@hey-api/sdk",
       validator: true,
-      operations: "byTags",
     },
   ],
 });

@@ -28,7 +28,7 @@ impl_to_schema!(CreateTodo);
 
 #[utoipa::path(
     get,
-    path = "/todos",
+    path = "/api/v1/todos",
     tag = "Todo",
     responses(
         (status = 200, description = "List all todos", body = [Todo])
@@ -55,7 +55,7 @@ vld::schema! {
 
 #[utoipa::path(
     get,
-    path = "/todos/{id}",
+    path = "/api/v1/todos/{id}",
     tag = "Todo",
     params(
         ("id" = i64, Path, description = "Todo ID")
@@ -86,7 +86,7 @@ async fn get_by_id(
 
 #[utoipa::path(
     post,
-    path = "/todos",
+    path = "/api/v1/todos",
     tag = "Todo",
     request_body = CreateTodo,
     responses(
@@ -117,7 +117,7 @@ async fn create(
 
 #[utoipa::path(
     put,
-    path = "/todos/{id}",
+    path = "/api/v1/todos/{id}",
     tag = "Todo",
     params(
         ("id" = i64, Path, description = "Todo ID")
@@ -159,7 +159,7 @@ async fn update(
 
 #[utoipa::path(
     delete,
-    path = "/todos/{id}",
+    path = "/api/v1/todos/{id}",
     tag = "Todo",
     params(
         ("id" = i64, Path, description = "Todo ID")
@@ -190,10 +190,10 @@ async fn destroy(
 
 pub fn router(db: PgPool) -> Router {
     Router::new()
-        .route("/todos", get(get_all))
-        .route("/todos", post(create))
-        .route("/todos/{id}", get(get_by_id))
-        .route("/todos/{id}", put(update))
-        .route("/todos/{id}", delete(destroy))
+        .route("/api/v1/todos", get(get_all))
+        .route("/api/v1/todos", post(create))
+        .route("/api/v1/todos/{id}", get(get_by_id))
+        .route("/api/v1/todos/{id}", put(update))
+        .route("/api/v1/todos/{id}", delete(destroy))
         .with_state(db)
 }

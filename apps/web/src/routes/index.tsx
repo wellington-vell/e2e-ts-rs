@@ -25,7 +25,7 @@ const TITLE_TEXT = `
  `;
 
 function HomeComponent() {
-  const { data } = useQuery(orpc.Health.check.queryOptions());
+  const { data } = useQuery(orpc.check.queryOptions());
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-2">

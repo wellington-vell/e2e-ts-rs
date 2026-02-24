@@ -28,7 +28,7 @@ export type CheckData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/health";
+  url: "/api/v1/health";
 };
 
 export type CheckResponses = {
@@ -44,7 +44,7 @@ export type GetAllData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/todos";
+  url: "/api/v1/todos";
 };
 
 export type GetAllResponses = {
@@ -60,7 +60,7 @@ export type CreateData = {
   body: CreateTodo;
   path?: never;
   query?: never;
-  url: "/todos";
+  url: "/api/v1/todos";
 };
 
 export type CreateResponses = {
@@ -81,7 +81,7 @@ export type DestroyData = {
     id: number;
   };
   query?: never;
-  url: "/todos/{id}";
+  url: "/api/v1/todos/{id}";
 };
 
 export type DestroyErrors = {
@@ -109,7 +109,7 @@ export type GetByIdData = {
     id: number;
   };
   query?: never;
-  url: "/todos/{id}";
+  url: "/api/v1/todos/{id}";
 };
 
 export type GetByIdErrors = {
@@ -137,7 +137,7 @@ export type UpdateData = {
     id: number;
   };
   query?: never;
-  url: "/todos/{id}";
+  url: "/api/v1/todos/{id}";
 };
 
 export type UpdateErrors = {

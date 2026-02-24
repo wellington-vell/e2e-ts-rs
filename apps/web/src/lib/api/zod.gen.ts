@@ -28,3 +28,66 @@ export const z_update_todo = z.object({
   completed: z.optional(z.union([z.boolean(), z.null()])),
   title: z.optional(z.union([z.string(), z.null()])),
 });
+
+export const z_check_data = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+export const z_get_all_data = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+export const z_create_data = z.object({
+  body: z_create_todo,
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+export const z_destroy_data = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.coerce
+      .bigint()
+      .min(BigInt("-9223372036854775808"), {
+        error: "Invalid value: Expected int64 to be >= -9223372036854775808",
+      })
+      .max(BigInt("9223372036854775807"), {
+        error: "Invalid value: Expected int64 to be <= 9223372036854775807",
+      }),
+  }),
+  query: z.optional(z.never()),
+});
+
+export const z_get_by_id_data = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.coerce
+      .bigint()
+      .min(BigInt("-9223372036854775808"), {
+        error: "Invalid value: Expected int64 to be >= -9223372036854775808",
+      })
+      .max(BigInt("9223372036854775807"), {
+        error: "Invalid value: Expected int64 to be <= 9223372036854775807",
+      }),
+  }),
+  query: z.optional(z.never()),
+});
+
+export const z_update_data = z.object({
+  body: z_update_todo,
+  path: z.object({
+    id: z.coerce
+      .bigint()
+      .min(BigInt("-9223372036854775808"), {
+        error: "Invalid value: Expected int64 to be >= -9223372036854775808",
+      })
+      .max(BigInt("9223372036854775807"), {
+        error: "Invalid value: Expected int64 to be <= 9223372036854775807",
+      }),
+  }),
+  query: z.optional(z.never()),
+});

@@ -19,7 +19,7 @@ impl HealthResponse {
 
 #[utoipa::path(
     get,
-    path = "/health",
+    path = "/api/v1/health",
     tag = "Health",
     responses(
         (status = 200, description = "Service is healthy", body = HealthResponse)
@@ -30,5 +30,5 @@ pub async fn check() -> impl IntoResponse {
 }
 
 pub fn router() -> Router {
-    Router::new().route("/health", get(check))
+    Router::new().route("/api/v1/health", get(check))
 }

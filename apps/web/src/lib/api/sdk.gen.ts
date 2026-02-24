@@ -19,6 +19,14 @@ import type {
   UpdateErrors,
   UpdateResponses,
 } from "./types.gen";
+import {
+  z_check_data,
+  z_create_data,
+  z_destroy_data,
+  z_get_all_data,
+  z_get_by_id_data,
+  z_update_data,
+} from "./zod.gen";
 
 export type Options<
   TData extends TDataShape = TDataShape,
@@ -37,80 +45,70 @@ export type Options<
   meta?: Record<string, unknown>;
 };
 
-export class Health {
-  public static check<ThrowOnError extends boolean = false>(
-    options?: Options<CheckData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      CheckResponses,
-      unknown,
-      ThrowOnError
-    >({ url: "/health", ...options });
-  }
-}
+export const check = <ThrowOnError extends boolean = false>(
+  options?: Options<CheckData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<CheckResponses, unknown, ThrowOnError>({
+    requestValidator: async (data) => await z_check_data.parseAsync(data),
+    url: "/api/v1/health",
+    ...options,
+  });
 
-export class Todo {
-  public static getAll<ThrowOnError extends boolean = false>(
-    options?: Options<GetAllData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).get<
-      GetAllResponses,
-      unknown,
-      ThrowOnError
-    >({ url: "/todos", ...options });
-  }
+export const getAll = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAllData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<GetAllResponses, unknown, ThrowOnError>({
+    requestValidator: async (data) => await z_get_all_data.parseAsync(data),
+    url: "/api/v1/todos",
+    ...options,
+  });
 
-  public static create<ThrowOnError extends boolean = false>(
-    options: Options<CreateData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).post<
-      CreateResponses,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/todos",
+export const create = <ThrowOnError extends boolean = false>(
+  options: Options<CreateData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<CreateResponses, unknown, ThrowOnError>({
+    requestValidator: async (data) => await z_create_data.parseAsync(data),
+    url: "/api/v1/todos",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+
+export const destroy = <ThrowOnError extends boolean = false>(
+  options: Options<DestroyData, ThrowOnError>,
+) =>
+  (options.client ?? client).delete<
+    DestroyResponses,
+    DestroyErrors,
+    ThrowOnError
+  >({
+    requestValidator: async (data) => await z_destroy_data.parseAsync(data),
+    url: "/api/v1/todos/{id}",
+    ...options,
+  });
+
+export const getById = <ThrowOnError extends boolean = false>(
+  options: Options<GetByIdData, ThrowOnError>,
+) =>
+  (options.client ?? client).get<GetByIdResponses, GetByIdErrors, ThrowOnError>(
+    {
+      requestValidator: async (data) => await z_get_by_id_data.parseAsync(data),
+      url: "/api/v1/todos/{id}",
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
+    },
+  );
 
-  public static destroy<ThrowOnError extends boolean = false>(
-    options: Options<DestroyData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).delete<
-      DestroyResponses,
-      DestroyErrors,
-      ThrowOnError
-    >({ url: "/todos/{id}", ...options });
-  }
-
-  public static getById<ThrowOnError extends boolean = false>(
-    options: Options<GetByIdData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).get<
-      GetByIdResponses,
-      GetByIdErrors,
-      ThrowOnError
-    >({ url: "/todos/{id}", ...options });
-  }
-
-  public static update<ThrowOnError extends boolean = false>(
-    options: Options<UpdateData, ThrowOnError>,
-  ) {
-    return (options.client ?? client).put<
-      UpdateResponses,
-      UpdateErrors,
-      ThrowOnError
-    >({
-      url: "/todos/{id}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-  }
-}
+export const update = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateData, ThrowOnError>,
+) =>
+  (options.client ?? client).put<UpdateResponses, UpdateErrors, ThrowOnError>({
+    requestValidator: async (data) => await z_update_data.parseAsync(data),
+    url: "/api/v1/todos/{id}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
