@@ -19,14 +19,6 @@ import type {
   UpdateErrors,
   UpdateResponses,
 } from "./types.gen";
-import {
-  z_check_data,
-  z_create_data,
-  z_destroy_data,
-  z_get_all_data,
-  z_get_by_id_data,
-  z_update_data,
-} from "./zod.gen";
 
 export type Options<
   TData extends TDataShape = TDataShape,
@@ -49,7 +41,6 @@ export const check = <ThrowOnError extends boolean = false>(
   options?: Options<CheckData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<CheckResponses, unknown, ThrowOnError>({
-    requestValidator: async (data) => await z_check_data.parseAsync(data),
     url: "/api/v1/health",
     ...options,
   });
@@ -58,7 +49,6 @@ export const getAll = <ThrowOnError extends boolean = false>(
   options?: Options<GetAllData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<GetAllResponses, unknown, ThrowOnError>({
-    requestValidator: async (data) => await z_get_all_data.parseAsync(data),
     url: "/api/v1/todos",
     ...options,
   });
@@ -67,7 +57,6 @@ export const create = <ThrowOnError extends boolean = false>(
   options: Options<CreateData, ThrowOnError>,
 ) =>
   (options.client ?? client).post<CreateResponses, unknown, ThrowOnError>({
-    requestValidator: async (data) => await z_create_data.parseAsync(data),
     url: "/api/v1/todos",
     ...options,
     headers: {
@@ -83,28 +72,19 @@ export const destroy = <ThrowOnError extends boolean = false>(
     DestroyResponses,
     DestroyErrors,
     ThrowOnError
-  >({
-    requestValidator: async (data) => await z_destroy_data.parseAsync(data),
-    url: "/api/v1/todos/{id}",
-    ...options,
-  });
+  >({ url: "/api/v1/todos/{id}", ...options });
 
 export const getById = <ThrowOnError extends boolean = false>(
   options: Options<GetByIdData, ThrowOnError>,
 ) =>
   (options.client ?? client).get<GetByIdResponses, GetByIdErrors, ThrowOnError>(
-    {
-      requestValidator: async (data) => await z_get_by_id_data.parseAsync(data),
-      url: "/api/v1/todos/{id}",
-      ...options,
-    },
+    { url: "/api/v1/todos/{id}", ...options },
   );
 
 export const update = <ThrowOnError extends boolean = false>(
   options: Options<UpdateData, ThrowOnError>,
 ) =>
   (options.client ?? client).put<UpdateResponses, UpdateErrors, ThrowOnError>({
-    requestValidator: async (data) => await z_update_data.parseAsync(data),
     url: "/api/v1/todos/{id}",
     ...options,
     headers: {

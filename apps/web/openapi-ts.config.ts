@@ -1,6 +1,7 @@
+import path from "path";
+
 import { defineConfig } from "@hey-api/openapi-ts";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
@@ -14,13 +15,11 @@ export default defineConfig({
   plugins: [
     {
       name: "zod",
-      requests: true,
       responses: false,
       case: "snake_case",
     },
     {
       name: "@hey-api/sdk",
-      validator: true,
     },
   ],
 });
